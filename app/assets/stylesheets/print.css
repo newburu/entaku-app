@@ -1,0 +1,36 @@
+/* Hide non-essential elements when printing */
+nav, .sidebar, form, .handle, .btn, a[href]:not(.printable-link) {
+  display: none !important;
+}
+
+/* General print styles */
+body {
+  font-family: sans-serif;
+  color: #000;
+  background-color: #fff;
+}
+
+h1, h2, h3 {
+  page-break-after: avoid;
+}
+
+.seating-chart-viewer, .table-viewer {
+  page-break-inside: avoid;
+}
+
+/* Seating chart specific styles */
+.seating-area {
+  width: 100%;
+}
+
+.table {
+  border: 2px solid #000;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.seat {
+  border: 1px solid #333;
+  padding: 8px;
+  margin: 4px;
+}

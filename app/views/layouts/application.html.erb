@@ -19,10 +19,39 @@
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "print", media: "print", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <nav>
+      <%= link_to "Entaku App", root_path %>
+      <ul>
+        <% if logged_in? %>
+          <% if Current.user.organizer? %>
+            <li><%= link_to "My Events", my_events_path %></li>
+          <% elsif Current.user.attendee? %>
+            <li><%= link_to "My Seat", my_seat_path %></li>
+          <% end %>
+          <li><%= button_to "Logout", logout_path, method: :delete %></li>
+        <% else %>
+          <li><%= link_to "Sign Up", sign_up_path %></li>
+          <li><%= link_to "Login", login_path %></li>
+        <% end %>
+      </ul>
+    </nav>
+
+    <div>
+      <% if notice %>
+        <p style="color: green"><%= notice %></p>
+      <% end %>
+      <% if alert %>
+        <p style="color: red"><%= alert %></p>
+      <% end %>
+    </div>
+
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>

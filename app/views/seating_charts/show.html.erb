@@ -1,0 +1,59 @@
+<h1>Seating Chart for <%= @event.title %></h1>
+
+<button onclick="window.print()">Print Seating Chart</button>
+
+<div data-controller="seating-chart">
+  <div class="seating-area">
+    <h2>Room Layout</h2>
+    <div class="tables-container" data-seating-chart-target="tablesContainer">
+      <% @seating_tables.each do |table| %>
+        <div class="table" data-seating-chart-target="table" data-event-id="<%= @event.id %>" data-table-id="<%= table.id %>" style="position: absolute; left: <%= table.x_position %>px; top: <%= table.y_position %>px; border: 1px solid black; padding: 10px; background-color: lightgray;">
+          <div class="handle" style="cursor: move; background-color: gray; color: white;"><%= table.name %></div>
+          <div class="seats">
+            <% table.seats.each do |seat| %>
+              <div class="seat" data-seating-chart-target="seat" data-seat-id="<%= seat.id %>" data-event-id="<%= @event.id %>" style="border: 1px solid darkgray; padding: 5px; margin-top: 5px; background-color: white;">
+                <% if seat.participant %>
+                  <div data-participant-id="<%= seat.participant.id %>"><%= seat.participant.name %></div>
+                <% else %>
+                  (Empty)
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <h2>Participants</h2>
+    <div data-seating-chart-target="participantList" id="participant-list">
+      <% @participants_without_seat.each do |participant| %>
+        <div data-participant-id="<%= participant.id %>" style="border: 1px solid blue; padding: 5px; margin-bottom: 5px; cursor: grab;"><%= participant.name %></div>
+      <% end %>
+    </div>
+
+    <hr>
+
+    <h2>Add Table</h2>
+    <%= form_with(model: [@event, SeatingTable.new], url: event_seating_tables_path(@event)) do |form| %>
+      <div>
+        <%= form.label :name %>
+        <%= form.text_field :name %>
+      </div>
+      <div>
+        <%= form.label :capacity %>
+        <%= form.number_field :capacity %>
+      </div>
+      <%= form.hidden_field :x_position, value: 10 %>
+      <%= form.hidden_field :y_position, value: 10 %>
+      <%= form.hidden_field :shape, value: 'rectangle' %>
+      <div>
+        <%= form.submit "Add Table" %>
+      </div>
+    <% end %>
+  </div>
+
+</div>
+
+<%= link_to "Back to Event", @event %>

@@ -1,0 +1,33 @@
+<h1>My Seating Assignment</h1>
+
+<% if @event %>
+  <h2>Event: <%= @event.title %></h2>
+  <p>Date: <%= @event.date.strftime("%Y-%m-%d %H:%M") %></p>
+
+  <% if @seat %>
+    <p>Your seat is at table <strong><%= @seat.seating_table.name %></strong>.</p>
+  <% else %>
+    <p>You have not been assigned a seat yet.</p>
+  <% end %>
+
+  <hr>
+
+  <div class="seating-chart-viewer">
+    <% @seating_tables.each do |table| %>
+      <div class="table-viewer" style="border: 1px solid black; padding: 10px; margin-bottom: 20px;">
+        <h3><%= table.name %></h3>
+        <div class="seats-viewer">
+          <% table.seats.each do |seat| %>
+            <% is_my_seat = seat.participant&.user == Current.user %>
+            <div class="seat-viewer" style="border: 1px solid gray; padding: 5px; margin: 2px; <%= 'background-color: yellow; font-weight: bold;' if is_my_seat %>">
+              <%= seat.participant&.name || "(Empty)" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+<% else %>
+  <p>You are not currently a participant in any upcoming events.</p>
+<% end %>

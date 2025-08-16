@@ -1,0 +1,38 @@
+<p style="color: green"><%= notice %></p>
+
+<h1><%= @event.title %></h1>
+<p><%= @event.date.strftime("%Y-%m-%d %H:%M") %></p>
+
+<hr>
+
+<h2>Participants</h2>
+
+<div id="participants">
+  <% @event.participants.each do |participant| %>
+    <div>
+      <%= participant.name %> (<%= participant.email %>)
+      <%= button_to "Remove", event_participant_path(@event, participant), method: :delete %>
+    </div>
+  <% end %>
+</div>
+
+<h3>Add Participant by Email</h3>
+<%= form_with(model: [@event, @participant]) do |form| %>
+  <div>
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+  <div>
+    <%= form.submit "Add Participant" %>
+  </div>
+<% end %>
+
+
+<hr>
+
+<%= link_to "Design Seating Chart", event_seating_chart_path(@event), style: "font-size: 1.2em; padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;" %>
+
+<hr>
+
+<%= link_to "Edit this event", edit_event_path(@event) %> |
+<%= link_to "Back to my events", my_events_path %>
